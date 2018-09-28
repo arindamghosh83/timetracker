@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2016
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timetracker.Web", "Timetracker.Web\Timetracker.Web.csproj", "{4CDA139F-6E77-4665-AF2C-DB1559C562EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timetracker.Web", "Timetracker.Web\Timetracker.Web.csproj", "{4CDA139F-6E77-4665-AF2C-DB1559C562EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timetracker.Core", "Timetracker.Core\Timetracker.Core.csproj", "{081B88B2-210C-443B-8623-27C02A689279}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timetracker.Core", "Timetracker.Core\Timetracker.Core.csproj", "{081B88B2-210C-443B-8623-27C02A689279}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timetracker.Functions", "Timetracker.Functions\Timetracker.Functions.csproj", "{FFBE2D34-9CAC-4865-A93A-B25C44B53F96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timetracker.Functions", "Timetracker.Functions\Timetracker.Functions.csproj", "{FFBE2D34-9CAC-4865-A93A-B25C44B53F96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timetracker.Test", "Timetracker.Test\Timetracker.Test.csproj", "{5F037330-54E6-486E-A972-B008B1C2ABD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timetracker.Test", "Timetracker.Test\Timetracker.Test.csproj", "{5F037330-54E6-486E-A972-B008B1C2ABD4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timetracker.Data", "Timetracker.Data\Timetracker.Data.csproj", "{4C2A27D1-9847-41C8-87C2-82C555DCA41E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{5F037330-54E6-486E-A972-B008B1C2ABD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F037330-54E6-486E-A972-B008B1C2ABD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F037330-54E6-486E-A972-B008B1C2ABD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C2A27D1-9847-41C8-87C2-82C555DCA41E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C2A27D1-9847-41C8-87C2-82C555DCA41E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C2A27D1-9847-41C8-87C2-82C555DCA41E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C2A27D1-9847-41C8-87C2-82C555DCA41E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
