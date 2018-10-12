@@ -1,0 +1,130 @@
+// Colors
+
+$blue: #005cb9; // Children's Mercy Blue #005cb9
+$light-blue: #6caae4; // Matches CM Blue
+$light-light-blue: #c2d6ef; // Matches CM Blue
+$light-light-light-blue: #EFF3FA; // Matches CM Blue
+$purple: #c126b8; // Children's Mercy Purple #C126B8
+$red: #ee2d4e; // Matches CM Brand Colors
+$orange: #ff6b0b; // Children's Mercy Orange #FF6B0B
+$light-orange: #ffa167; // Matches CM Orange
+$light-light-orange: #fdd6ba; // Matches CM Orange
+$yellow: #eda900; // Children's Mercy Yellow #EDA900
+$green: #3fae29; // Children's Mercy Green #3FAE29
+$gray: #8a8a8d; // Children's Mercy Gray #8A8A8D
+$white: #ffffff;
+$black: #000000;
+
+$primary: $blue;
+$secondary: $orange;
+$success: $green;
+$info: $light-blue;
+$warning: $yellow;
+$danger: $red;
+$light: $light-blue;
+$dark: $blue;
+
+
+
+.border-black {
+  border-color: $black !important;
+}
+
+.text-red, .text-danger {
+  color: $red !important;
+}
+
+
+// Fonts
+
+html, body {
+  font-family: 'Segoe UI',Verdana, Geneva, sans-serif !important;
+  line-height: normal;
+}
+
+$font-size-base: 0.9rem;
+$font-size-lg: 1.1rem;
+$font-size-sm: 0.75rem;
+
+$h1-font-size: 1rem;
+$h2-font-size: 1.25rem;
+$h3-font-size: $font-size-lg;
+$h4-font-size: $font-size-base;
+$h5-font-size: $font-size-sm;
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: bold !important;
+}
+// Border Radius Resets
+
+$border-radius: 0px;
+$border-radius-lg: 0px;
+$border-radius-sm: 0px;
+
+// Buttons
+
+.btn {
+  font-size: $font-size-base !important;
+}
+
+.btn-primary {
+  color: $white !important;
+}
+
+select {
+  font-size: $font-size-sm !important;
+  padding: 2px;
+}
+
+.fa-left {
+  margin-right: 10px; // For Font Awesome icons placed to the left of button text - adds more white space between the text & icon
+}
+
+.fa-right {
+  margin-left: 10px; // For Font Awesome icons placed to the right of button text - adds more white space between the text & icon
+}
+
+$input-btn-padding-y: 0.475rem !default;
+$input-btn-padding-x: 0.85rem !default;
+$btn-padding-y: $input-btn-padding-y !default;
+$btn-padding-x: $input-btn-padding-x !default;
+
+// header
+$navbar-padding-y: 0px;
+$navbar-brand-font-size: $font-size-base;
+
+// header-nav-container needs to be here (not in nav-menu.component.scss)
+#header-nav-container {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.navbar {
+  height: 42px !important;
+  background-color: $primary;
+}
+
+#footer-container {
+  height: 30px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  display: flex;
+  justify-content: center;
+  color: $white;
+  background-color: $primary;
+}
+
+// Globally hide the up / down arrows that appear in number input boxes
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.popover-body {
+  overflow: scroll;
+}

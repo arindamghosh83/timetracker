@@ -1,3 +1,7 @@
+@import '~bootstrap/scss/_functions.scss';
+@import '~bootstrap/scss/_variables.scss';
+
+
 li .glyphicon {
     margin-right: 10px;
 }
@@ -6,25 +10,56 @@ li .glyphicon {
 li.link-active a,
 li.link-active a:hover,
 li.link-active a:focus {
-    background-color: #4189C7;
-    color: white;
+    background-color: whitesmoke;
+    color:$white;
 }
 
-/* Keep the nav menu independent of scrolling and on top of other items */
-.main-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1;
+
+.navbar{
+    flex-wrap: wrap-reverse;
 }
+a
+.dropdown-toggle > span {
+    color: #212529;
+}
+
+#navbarTogglerDemo01{
+    // justify-content: space-around;
+    flex-wrap: wrap;
+    flex-grow: 0;
+}
+
+.dropdown-menu{
+    min-width: 8rem;
+}
+
+.nav-item{
+    min-width: 100px;
+}
+
+
+#navbar-logo-container{
+    max-width: 120px;
+}
+
+
+#navbar-title-container{
+    padding-top: 10px;
+    text-align: center;
+    color: $white;
+}
+
+.hemnavitem{
+    flex-grow: 1;
+}
+
+#nav-item-username {
+    @extend #navbar-title-container;
+}
+
 
 @media (min-width: 768px) {
     /* On small screens, convert the nav menu to a vertical sidebar */
-    .main-nav {
-        height: 100%;
-        width: calc(25% - 20px);
-    }
     .navbar {
         border-radius: 0px;
         border-width: 0px;
@@ -34,7 +69,6 @@ li.link-active a:focus {
         float: none;
     }
     .navbar-collapse {
-        border-top: 1px solid #444;
         padding: 0px;
     }
     .navbar ul {

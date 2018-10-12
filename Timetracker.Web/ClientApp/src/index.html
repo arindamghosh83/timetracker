@@ -1,14 +1,39 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
-  <title>Timetracker.Web</title>
+  <title>Time Tracker</title>
   <base href="/">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <style>
+    .load-spinner .modal-dialog {
+      display: table;
+      position: relative;
+      margin: 0 auto;
+      top: calc(33% - 24px);
+    }
+
+    .load-spinner .modal-dialog .modal-content {
+      background-color: transparent;
+      border: none;
+    }
+  </style>
+  <script>
+  </script>
 </head>
+
 <body>
-  <app-root>Loading...</app-root>
+  <app-root>
+    <div id='spinnercontainer'>
+      <span class="fa fa-spinner fa-spin fa-3x"></span>
+    </div>
+  </app-root>
+  <script>
+    __Zone_enable_cross_context_check = true;
+  </script>
 </body>
+
 </html>

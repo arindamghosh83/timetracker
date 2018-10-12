@@ -1,5 +1,5 @@
 {
-  "name": "Timetracker.Web",
+  "name": "timetracker.web",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
@@ -23,10 +23,15 @@
     "@angular/platform-browser-dynamic": "^5.2.0",
     "@angular/platform-server": "^5.2.0",
     "@angular/router": "^5.2.0",
+    "@ng-bootstrap/ng-bootstrap": "^2.0.0",
     "@nguniversal/module-map-ngfactory-loader": "^5.0.0-beta.5",
+    "adal-angular": "^1.0.17",
     "aspnet-prerendering": "^3.0.1",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^4.0.0",
+    "classlist.js": "^1.1.20150312",
     "core-js": "^2.4.1",
+    "font-awesome": "^4.7.0",
+    "ngx-toastr": "~8.10.2",
     "rxjs": "^5.5.6",
     "zone.js": "^0.8.19"
   },
@@ -37,6 +42,7 @@
     "@types/jasmine": "~2.8.3",
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "~6.0.60",
+    "@types/adal": "^1.0.29",
     "codelyzer": "^4.0.1",
     "jasmine-core": "~2.8.0",
     "jasmine-spec-reporter": "~4.2.1",

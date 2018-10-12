@@ -1,0 +1,51 @@
+<div class="container" id="efforts-container">
+  <div class="row" id="effort-date-range">
+    <div class="col-12 text-center">
+      <i class="fa fa-arrow-circle-left fa-2x text-primary pr-2 " (click)="previousEffort()"></i>
+
+      <span class="label label-info"><b>{{currentEffort.weekStartDate}} <i class="fa fa-arrows-h" aria-hidden="true"></i>
+          {{currentEffort.weekEndDate}}</b></span>
+
+      <i class="fa fa-arrow-circle-right fa-2x text-primary pr-2" (click)="nextEffort()"></i>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-8 text-center">
+      <h1>Project</h1>
+    </div>
+    <div class="col-3  text-center">
+      <h1>
+        <span class="text-nowrap">Time(%)</span>
+      </h1>
+    </div>
+    <div class="col-1 text-left">
+    </div>
+  </div>
+  <app-effort-row *ngFor="let effort of currentEffort.efforts;  index as i" [effortrow]="effort" [effortindex]="i"
+    (outgoingEffort)="effortUpdate($event)"></app-effort-row>
+
+  <div class="row">
+    <div class="col-8 text-left">
+
+      <i class="fa fa-plus-circle text-info pr-2 fa-3x" (click)="addEffort()"></i>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-8 text-right">
+      <button id="updateEffort" class="btn btn-success" (click)="saveEffort()" [disabled]="totalEffort != 100">
+        Update Effort
+      </button>
+    </div>
+    <div class="col-3  text-left">
+      <input type="text" class="form-control" name="totalEffort" [ngModel]="totalEffort" disabled required>
+    </div>
+  </div>
+  <div class="row">
+  </div>
+  <div class="col-8 text-right">
+    <span class="badge badge-pill badge-warning" *ngIf="totalEffort > 100">Effort Must Be 100%</span>
+  </div>
+  <div class="col-3  text-left">
+  </div>
+</div>

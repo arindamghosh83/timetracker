@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timetracker.Functions", "Ti
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timetracker.Test", "Timetracker.Test\Timetracker.Test.csproj", "{5F037330-54E6-486E-A972-B008B1C2ABD4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timetracker.Data", "Timetracker.Data\Timetracker.Data.csproj", "{4C2A27D1-9847-41C8-87C2-82C555DCA41E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timetracker.Data", "Timetracker.Data\Timetracker.Data.csproj", "{4C2A27D1-9847-41C8-87C2-82C555DCA41E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

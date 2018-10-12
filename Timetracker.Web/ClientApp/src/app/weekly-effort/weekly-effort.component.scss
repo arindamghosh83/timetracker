@@ -1,0 +1,44 @@
+@import '~bootstrap/scss/_functions.scss';
+@import '~bootstrap/scss/_variables.scss';
+@import '../../../src/customize-bootstrap.scss';
+
+div {
+  line-height: 2rem !important;
+  text-align: right;
+}
+
+input {
+  font-size: $font-size-lg;
+  text-align: right;
+}
+
+div i:hover {
+  cursor: pointer;
+}
+
+input.ng-invalid.ng-touched {
+  border: 1px solid $red;
+}
+
+.exclude-include-icon {
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+/* odd and even row styling applied to rows in lab-result-component */
+.odd {
+  background-color: $white;
+}
+
+.even {
+  background-color: $light-light-light-blue;
+}
+#efforts-container {
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-bottom: 40px;
+}
+
+#effort-date-range {
+  background-color: whitesmoke;
+}

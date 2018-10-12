@@ -45,8 +45,8 @@ namespace Timetracker.Web
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 			app.UseSpaStaticFiles();
-
-			app.UseMvc(routes =>
+		    app.UseAuthentication();
+            app.UseMvc(routes =>
 			{
 				routes.MapRoute(
 					name: "default",
