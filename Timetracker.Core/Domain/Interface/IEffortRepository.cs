@@ -6,8 +6,11 @@ using TimeTracker.Core.Domain.Model;
 
 namespace TimeTracker.Core.Domain.Interface
 {
-    interface IEffortRepository
+    public interface IEffortRepository
     {
-        Task<List<Effort>> GetEffortForDateRange(int personId, DateTime startDate, DateTime endDate);
+
+        Task<IEnumerable<Effort>> GetEffortForDateRange(string userID, DateTime startDate, DateTime endDate);
+        
+
     }
 }

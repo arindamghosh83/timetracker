@@ -13,12 +13,10 @@ namespace TimeTracker.Core.Domain.Model
         public string UserId { get; set; }
         [ForeignKey("ProjectId")]
         public Project Project { get; set; }
+        public int ProjectId { get; set; }
         public double EffortPercent { get; set; }
 	    public DateTime StartDate { get; set; }
 	    public DateTime EndDate { get; set; }
-	    public DateTime CreatedOn { get; set; }
-	    public DateTime UpdatedOn { get; set; }
-	    public string CreatedBy { get; set; }
-	    public string UpdatedBy { get; set; }
+
 	}
 }

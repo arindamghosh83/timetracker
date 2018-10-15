@@ -18,5 +18,12 @@ namespace TimeTracker.Core.Infrastructure.Data
                 "Server=(LocalDb)\\MSSQLLocalDB;Integrated Security=true;Initial Catalog=TimeTrackerDB;");
             return new TimeTrackerContext(builder.Options);
         }
+        public TimeTrackerContext CreateDbContext()
+        {
+            var builder = new DbContextOptionsBuilder<TimeTrackerContext>();
+            builder.UseSqlServer(
+                "Server=(LocalDb)\\MSSQLLocalDB;Integrated Security=true;Initial Catalog=TimeTrackerDB;");
+            return new TimeTrackerContext(builder.Options);
+        }
     }
 }

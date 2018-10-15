@@ -12,6 +12,11 @@ namespace TimeTracker.Core.Infrastructure.Data
         {
         }
 
+        public TimeTrackerContext()
+        {
+            
+        }
+
         public DbSet<Effort> Effort { get; set; }
         public DbSet<Project> Project { get; set; }
         public DbSet<Person> Person { get; set; }

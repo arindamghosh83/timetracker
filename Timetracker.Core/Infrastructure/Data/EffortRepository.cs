@@ -1,26 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Timetracker.Core.Infrastructure;
 using TimeTracker.Core.Domain.Interface;
 using TimeTracker.Core.Domain.Model;
+using TimeTracker.Core.Infrastructure.Data;
 
-namespace TimeTracker.Core.Infrastructure.Data
+namespace Timetracker.Core.Infrastructure.Data
 {
-    public class EffortRepository : DataRepository<Effort, int>, IEffortRepository
+    public class EffortRepository : EFReadOnlyRepository, IEffortRepository
     {
-        private DbContext context;
-        public EffortRepository(TimeTrackerContext db) : base(db)
+        public EffortRepository() : base()
         {
-            context = db;
+
         }
 
-        public async Task<List<Effort>> GetEffortForDateRange(int personId, DateTime startDate, DateTime endDate)
+        public async Task<IEnumerable<Effort>> GetEffortForDateRange(string userID, DateTime startDate, DateTime endDate)
         {
 
-            return null;
+            Expression<Func<Effort, bool>> predicate = e => e.UserId == userID && e.StartDate >= startDate && e.EndDate <= endDate;
+            var timeTrackerContext = context as TimeTrackerContext;
+            var combinedEffort = await timeTrackerContext.Effort.Where(predicate).Include(e => e.Project).ToListAsync();
+            return combinedEffort;
+
+
         }
     }
 }
