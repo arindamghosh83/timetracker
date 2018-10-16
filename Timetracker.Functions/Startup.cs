@@ -24,13 +24,6 @@ namespace Timetracker.Functions
 
         public void Configure(IWebJobsBuilder builder)
         {
-
-            _config = new ConfigurationBuilder()
-                .SetBasePath(Environment.CurrentDirectory)
-                .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables()
-                .Build();
-
             builder.AddDependencyInjection(ConfigureServices);
         }
 
@@ -41,7 +34,7 @@ namespace Timetracker.Functions
             services.AddScoped<IEffortRepository, EffortRepository>();
             services.AddScoped<IRepository, EFRepository>();
             services.AddSingleton<IReadOnlyRepositry, EFReadOnlyRepository>();
-            var connectionString = _config.GetConnectionString("SqlConnectionString");
+            var connectionString = Environment.GetEnvironmentVariable("TimeTrackerConnectionString");
             services.AddDbContext<TimeTrackerContext>(options => options.UseSqlServer(connectionString));
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();

@@ -25,6 +25,7 @@
     "@angular/router": "^5.2.0",
     "@ng-bootstrap/ng-bootstrap": "^2.0.0",
     "@nguniversal/module-map-ngfactory-loader": "^5.0.0-beta.5",
+    "jquery": "^1.9.1",
     "adal-angular": "^1.0.17",
     "aspnet-prerendering": "^3.0.1",
     "bootstrap": "^4.0.0",

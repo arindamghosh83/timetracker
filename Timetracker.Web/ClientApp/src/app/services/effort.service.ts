@@ -29,12 +29,12 @@ export class EffortService {
         return projects$;
       }
 
-      getEfforts(): Observable<IWeeklyEffort[]> {
+      getEfforts(personId: string): Observable<IWeeklyEffort[]> {
         const userEfforts$ = this.httpClient
           .get<IWeeklyEffort[]>(
             `${environment.endpoints.apiBaseUri}${
               appConstants.getActivitiesEndPoint
-            }`
+            }${personId}`
           )
           .pipe(
             share(),
@@ -50,7 +50,7 @@ export class EffortService {
         return userEfforts$;
       }
 
-      saveEfforts(weeklyEffort: IWeeklyEffort): boolean {
+      saveEfforts(weeklyEffort: IWeeklyEffort, userName: string): boolean {
         
         var requestEfforts: IEffortUpsertRequest[] = [];
 
@@ -59,7 +59,8 @@ export class EffortService {
             effortPercent: weeklyEffort.efforts[i].effortPercent,
             isDeleted: weeklyEffort.efforts[i].isDeleted == true,
             projectId: weeklyEffort.efforts[i].project.id,
-            id: weeklyEffort.efforts[i].id
+            id: weeklyEffort.efforts[i].id,
+            createdBy: userName
           });
         }
         

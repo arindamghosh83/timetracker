@@ -6,4 +6,65 @@ $fa-font-path: "~font-awesome/fonts";
 @import '~bootstrap/scss/bootstrap';
 @import '~ngx-toastr/toastr-bs4-alert';
 
+html,
+body,
+.wrapper,
+.container-fluid,
+.search-container {
+  height: 95%;
+}
+
+.search-row{
+  margin-top: 5%;
+}
+
+#spinnercontainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+/* left column container is shared by multiple components (lab-results-component, simulation-detailts-component */
+#left-column-container {
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-bottom: 40px;
+}
+
+
+/* interaction-dropdown-container tightens up layout / line spacing between label and dropdowns in user interaction areas */
+.interaction-dropdown-container{
+  line-height: 130% !important;
+  font-size: $font-size-sm;
+}
+
+/* popover-body is used in multiple components for popover help text. Overrides for overflow x and y need to be here in styles.scss, not at the component level */
+.popover-body {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+input, select, option {
+  font-weight: bold !important;
+  max-height: 38px;
+}
+
+.number-input {
+  max-width: 90px;
+}
+
+.required {
+  border-color: $orange !important;
+}
+
+/* supresses left and right borders on datepicker required fields */
+.border-left-right-none {
+  border-left: none !important;
+  border-right: none !important;
+}
+
+.border-left-none {
+  border-left: none !important;
+}
+
 

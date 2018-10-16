@@ -24,4 +24,5 @@ export interface IEffort {
     effortPercent: number;
     isDeleted: boolean;
     id: number;
+    createdBy: string;
   }

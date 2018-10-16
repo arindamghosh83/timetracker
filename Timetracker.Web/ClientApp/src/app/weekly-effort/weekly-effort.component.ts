@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 import { DataProvider } from '../data-provider'
 import { EffortService } from '../services/effort.service'
+import { AdalService } from '../services/adal.service';
 @Component({
   selector: 'weekly-effort',
   styleUrls: ['./weekly-effort.component.scss'],
@@ -19,15 +20,21 @@ export class WeeklyEffortComponent implements OnInit {
   selectedProjects: any;
   displayStartDate: string;
   displayEndDate: string;
+  username: string;
+  dataLoaded: boolean;
 
   constructor(
     private toastr: ToastrService,
-    private service: EffortService
+    private service: EffortService,
+    private adalService: AdalService
   ) {
     this.currentEffort = <IWeeklyEffort>{ weekStartDate: '', weekEndDate: '', efforts: [] };
-
+    this.dataLoaded = false;
   }
   ngOnInit(): void {
+
+    this.getUserName();
+
     this.service.getAllProjects().subscribe(
       allProjectsReceived => {
         if (allProjectsReceived && allProjectsReceived.length > 0) {
@@ -37,37 +44,36 @@ export class WeeklyEffortComponent implements OnInit {
             id: 0,
             active: true
           });
+          this.dataLoaded = true;
+          this.service.getEfforts(this.username).subscribe(
+            allEfforts => {
+              if (allEfforts && this.projects && this.projects.length > 0) {
+
+                this.efforts = allEfforts;
+
+                this.assignSelectableProjects(this.efforts);
+
+                this.effortWeekCounter = 0;
+                this.currentEffort = this.efforts[this.effortWeekCounter];
+                this.displayStartDate = this.getDisplayDate(this.currentEffort.weekStartDate);
+                this.displayEndDate = this.getDisplayDate(this.currentEffort.weekEndDate);
+                this.totalEffort = this.getTotalEffort(this.currentEffort.efforts);
+              }
+            },
+            error => {
+            }
+          );
         }
       },
       error => {
 
       }
     );
-    this.service.getEfforts().subscribe(
-      allEfforts => {
-        if (allEfforts && this.projects && this.projects.length > 0) {
-
-          this.efforts = allEfforts;
-
-          this.assignSelectableProjects(this.efforts);
-
-          this.effortWeekCounter = 0;
-          this.currentEffort = this.efforts[this.effortWeekCounter];
-          this.displayStartDate = this.getDisplayDate(this.currentEffort.weekStartDate);
-          this.displayEndDate = this.getDisplayDate(this.currentEffort.weekEndDate);
-          this.totalEffort = this.getTotalEffort(this.currentEffort.efforts);
-        }
-      },
-      error => {
-      }
-    );
-
-
 
   }
 
   getDisplayDate(date) {
-    return moment(date).format('MM-DD-YYYY');
+    return moment(date).format('MM/DD/YYYY');
   }
   effortUpdate(outgoingEffort: IEffort) {
     this.totalEffort = this.getTotalEffort(this.currentEffort.efforts);
@@ -113,7 +119,7 @@ export class WeeklyEffortComponent implements OnInit {
   }
 
   saveEffort() {
-    var response = this.service.saveEfforts(this.currentEffort);
+    var response = this.service.saveEfforts(this.currentEffort, this.username);
     if (response) {
       this.toastr.success('Efforts Updated', 'Saved!');
     } else {
@@ -211,5 +217,17 @@ export class WeeklyEffortComponent implements OnInit {
       }
     }
     return foundSelectableProjects;
+  }
+
+  getUserName() {
+    this.adalService.context.getUser((msg, user) => {
+      if (user) {
+        let { profile: { name = '', unique_name = '' } = {} } = user;
+        if (unique_name) {
+          var index: string = unique_name;
+          this.username = index.split('@')[0];
+        }
+      }
+    });
   }
 }
