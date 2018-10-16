@@ -18,3 +18,10 @@ export interface IEffort {
     id: number;
     active: boolean;
   }
+
+  export interface IEffortUpsertRequest {
+    projectId: number;
+    effortPercent: number;
+    isDeleted: boolean;
+    id: number;
+  }

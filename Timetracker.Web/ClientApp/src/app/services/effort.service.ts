@@ -1,22 +1,14 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   HttpClient,
-  HttpErrorResponse,
-  HttpParams,
-  HttpHeaders
-} from '@angular/common/http';
+  HttpErrorResponse} from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs/observable/of';
-import { tap, catchError, map, delay, share } from 'rxjs/operators';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
+import { catchError, share } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { Subscription } from 'rxjs/Subscription';
 import appConstants from '../constants/constants';
-import { IProject, IWeeklyEffort } from '../models/effort.model';
+import { IProject, IWeeklyEffort, IEffortUpsertRequest } from '../models/effort.model';
 @Injectable()
 export class EffortService {
     constructor(
@@ -37,12 +29,12 @@ export class EffortService {
         return projects$;
       }
 
-      getEfforts(personId: string): Observable<IWeeklyEffort[]> {
+      getEfforts(): Observable<IWeeklyEffort[]> {
         const userEfforts$ = this.httpClient
           .get<IWeeklyEffort[]>(
             `${environment.endpoints.apiBaseUri}${
               appConstants.getActivitiesEndPoint
-            }${personId}`
+            }`
           )
           .pipe(
             share(),
@@ -59,6 +51,18 @@ export class EffortService {
       }
 
       saveEfforts(weeklyEffort: IWeeklyEffort): boolean {
+        
+        var requestEfforts: IEffortUpsertRequest[] = [];
+
+        for(var i = 0; i < weeklyEffort.efforts.length; i++){
+          requestEfforts.push(<IEffortUpsertRequest>{
+            effortPercent: weeklyEffort.efforts[i].effortPercent,
+            isDeleted: weeklyEffort.efforts[i].isDeleted == true,
+            projectId: weeklyEffort.efforts[i].project.id,
+            id: weeklyEffort.efforts[i].id
+          });
+        }
+        
         const userEfforts$ = this.httpClient
           .post<any>(
             `${environment.endpoints.apiBaseUri}${
@@ -67,7 +71,7 @@ export class EffortService {
             {
               weekStartDate: weeklyEffort.weekStartDate,
               weekEndDate: weeklyEffort.weekEndDate,
-              efforts: weeklyEffort.efforts
+              efforts: requestEfforts
             }
           )
           .pipe(

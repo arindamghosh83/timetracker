@@ -1,13 +1,30 @@
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
   <!-- <a class="navbar-brand" href="#">Expand at sm</a> -->
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
   <div id='navbar-logo-container' class='hemnavitem'>
       <img src="assets/image/childrens-mercy-logo-white.svg" class="img-fluid" />
   </div>
   <div id="navbar-title-container" class="hemnavitem">
     <h1>{{title}}</h1>
   </div>
-  <i class="fa fa-user-circle" aria-hidden="true" style="float:right; color:white;">Batman</i>
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo01" *ngIf="this.username">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <i class="fa fa-user-circle"></i>
+            <span id="nav-item-username">{{username}}</span></a>
+          <div class="dropdown-menu text-right" aria-labelledby="navbarDropdown">
 
+            <a class="dropdown-item" href="#">Patient Search <i class="fa fa-right fa-search"></i></a>
+            <a class="dropdown-item" [routerLink]='["logout"]'>Log Out<i class="fa fa-right fa-times-circle"></i></a>
+          </div>
+
+        </li>
+      </ul>
+    </div>
 </nav>
 
 

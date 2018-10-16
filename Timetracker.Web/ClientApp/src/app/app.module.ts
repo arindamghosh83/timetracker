@@ -18,10 +18,12 @@ import { EffortHttpInterceptorService } from './services/effort-http-interceptor
 import { AppRoutingModule } from './app-routing.module';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guards/auth.guard';
+import { LogoutComponent } from './logout/logout.component';
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
+    LogoutComponent,
     NavMenuComponent,
     WeeklyEffortComponent,
     CounterComponent,

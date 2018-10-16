@@ -3,10 +3,11 @@ import { Routes, RouterModule, Route } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { WeeklyEffortComponent } from './weekly-effort/weekly-effort.component';
 import { AuthGuard } from './guards/auth.guard';
+import { LogoutComponent } from './logout/logout.component';
 
 export const routes: Route[] = [
-  { path: 'login', component: LoginComponent }
-    ,
+  { path: 'login', component: LoginComponent },
+  { path: 'logout', component: LogoutComponent },
   {
     path: '',
     component: WeeklyEffortComponent,
