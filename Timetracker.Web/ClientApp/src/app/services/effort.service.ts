@@ -50,7 +50,7 @@ export class EffortService {
         return userEfforts$;
       }
 
-      saveEfforts(weeklyEffort: IWeeklyEffort, userName: string): boolean {
+      saveEfforts(weeklyEffort: IWeeklyEffort, userName: string): Observable<any> {
         
         var requestEfforts: IEffortUpsertRequest[] = [];
 
@@ -73,20 +73,9 @@ export class EffortService {
               weekStartDate: weeklyEffort.weekStartDate,
               weekEndDate: weeklyEffort.weekEndDate,
               efforts: requestEfforts
-            }
+            },
+            {observe: "response"}
           )
-          .pipe(
-            share(),
-            catchError((err: HttpErrorResponse) => {
-              console.log(err);
-              return of(false);
-            })
-          );
-          userEfforts$.subscribe(response => {
-            if (!response) {
-              return false;
-            }
-          }); 
-          return true;
+          return userEfforts$;
       }
 }

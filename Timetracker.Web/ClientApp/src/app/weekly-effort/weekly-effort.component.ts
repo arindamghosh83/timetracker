@@ -119,12 +119,17 @@ export class WeeklyEffortComponent implements OnInit {
   }
 
   saveEffort() {
-    var response = this.service.saveEfforts(this.currentEffort, this.username);
-    if (response) {
-      this.toastr.success('Efforts Updated', 'Saved!');
-    } else {
-      this.toastr.error('Effort Update Failed. Please contact one Dev Team.', 'Unable to Save.');
-    }
+    var response$ = this.service.saveEfforts(this.currentEffort, this.username);
+    response$.subscribe(response => {
+      if (response && (response.status == 200 || response.status == 201)) {
+        this.toastr.success('Efforts Updated', 'Saved!');
+      } else {
+        this.toastr.error('Effort Update Failed. Please contact Support.', 'Unable to Save.');
+      }
+    }, error => {
+      console.log(error);
+      this.toastr.error('Effort Update Failed. Please contact Support.', 'Unable to Save.');
+    });
   }
 
   getTotalEffort(effortList) {
