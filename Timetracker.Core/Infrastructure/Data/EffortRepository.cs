@@ -11,19 +11,20 @@ using TimeTracker.Core.Infrastructure.Data;
 
 namespace Timetracker.Core.Infrastructure.Data
 {
-    public class EffortRepository : EFReadOnlyRepository, IEffortRepository
+    public class EffortRepository : IEffortRepository
     {
-        public EffortRepository() : base()
-        {
+        public readonly TimeTrackerContext _context;
 
+        public EffortRepository(TimeTrackerContext context)
+        {
+            this._context = context;
         }
 
         public async Task<IEnumerable<Effort>> GetEffortForDateRange(string userID, DateTime startDate, DateTime endDate)
         {
 
             Expression<Func<Effort, bool>> predicate = e => e.UserId == userID && e.StartDate >= startDate && e.EndDate <= endDate;
-            var timeTrackerContext = context as TimeTrackerContext;
-            var combinedEffort = await timeTrackerContext.Effort.Where(predicate).Include(e => e.Project).ToListAsync();
+            var combinedEffort = await this._context.Effort.Where(predicate).Include(e => e.Project).ToListAsync();
             return combinedEffort;
 
 

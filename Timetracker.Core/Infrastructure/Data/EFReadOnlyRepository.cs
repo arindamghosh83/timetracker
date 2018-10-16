@@ -15,16 +15,11 @@ namespace Timetracker.Core.Infrastructure
 
     public class EFReadOnlyRepository : IReadOnlyRepositry
     {
-        public readonly DbContext context;
+        public readonly TimeTrackerContext _context;
 
-        //public EFReadOnlyRepository(DbContext context)
-        //{
-        //    this.context = new TimeTrackerContextFactory().CreateDbContext();
-        //}
-
-        public EFReadOnlyRepository()
+        public EFReadOnlyRepository(TimeTrackerContext context)
         {
-            this.context = new TimeTrackerContextFactory().CreateDbContext();
+            this._context = context;
         }
 
 
@@ -39,7 +34,7 @@ namespace Timetracker.Core.Infrastructure
         where TEntity : class, IEntity
         {
             includeProperties = includeProperties ?? string.Empty;
-            IQueryable<TEntity> query = context.Set<TEntity>();
+            IQueryable<TEntity> query = this._context.Set<TEntity>();
 
             if (filter != null)
             {
@@ -59,8 +54,7 @@ namespace Timetracker.Core.Infrastructure
         {
 
             Expression<Func<Effort, bool>> predicate = e => e.UserId == userID && e.StartDate >= startDate && e.EndDate <= endDate;
-            var timeTrackerContext = context as TimeTrackerContext;
-            var combinedEffort = await timeTrackerContext.Effort.Where(predicate).Include(e => e.Project).ToListAsync();
+            var combinedEffort = await this._context.Effort.Where(predicate).Include(e => e.Project).ToListAsync();
             return combinedEffort;
 
 

@@ -3,15 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using Autofac.Core;
-using AzureFunctions.Autofac;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
-using Timetracker.Functions.Inject;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
 using Timetracker.Core.Domain.Interface;
@@ -20,11 +16,11 @@ using Timetracker.Core.DTO;
 using Timetracker.Core.Utilities;
 using TimeTracker.Core.Domain.Interface;
 using TimeTracker.Core.Domain.Model;
-
+using Willezone.Azure.WebJobs.Extensions.DependencyInjection;
 
 namespace Timetracker.Functions.Api
 {
-    [DependencyInjectionConfig(typeof(DIConfig))]
+    //[DependencyInjectionConfig(typeof(DIConfig))]
     public static class ActivityApi
     {
         /// <summary>

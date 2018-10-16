@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timetracker.Functions", "Ti
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timetracker.Test", "Timetracker.Test\Timetracker.Test.csproj", "{5F037330-54E6-486E-A972-B008B1C2ABD4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Timetracker.Data", "Timetracker.Data\Timetracker.Data.csproj", "{4C2A27D1-9847-41C8-87C2-82C555DCA41E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,10 +33,6 @@ Global
 		{5F037330-54E6-486E-A972-B008B1C2ABD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F037330-54E6-486E-A972-B008B1C2ABD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F037330-54E6-486E-A972-B008B1C2ABD4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4C2A27D1-9847-41C8-87C2-82C555DCA41E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4C2A27D1-9847-41C8-87C2-82C555DCA41E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4C2A27D1-9847-41C8-87C2-82C555DCA41E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4C2A27D1-9847-41C8-87C2-82C555DCA41E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

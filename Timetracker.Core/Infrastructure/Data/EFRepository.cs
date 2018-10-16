@@ -4,27 +4,36 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Timetracker.Core.Domain.Interface;
+using TimeTracker.Core.Infrastructure.Data;
 
 namespace Timetracker.Core.Infrastructure.Data
 {
-    public class EFRepository: EFReadOnlyRepository, IRepository
+    public class EFRepository: IRepository
     {
+        public readonly TimeTrackerContext _context;
+
+        public EFRepository(TimeTrackerContext context)
+        {
+            this._context = context;
+        }
+
+
         public virtual void Create<TEntity>(TEntity entity) where TEntity : class, IEntity
         {
             //context.Set<TEntity>().Attach(entity);
             //context.Entry(entity).State = EntityState.Added;
-            context.Set<TEntity>().Add(entity);
+            _context.Set<TEntity>().Add(entity);
         }
 
         public virtual void Update<TEntity>(TEntity entity) where TEntity : class, IEntity
         {
-            context.Set<TEntity>().Attach(entity);
-            context.Entry(entity).State = EntityState.Modified;
+            _context.Set<TEntity>().Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
         }
 
         public virtual void Delete<TEntity>(object id) where TEntity : class, IEntity
         {
-            TEntity entity = context.Set<TEntity>().Find(id);
+            TEntity entity = _context.Set<TEntity>().Find(id);
             if (entity != null)
             {
                 Delete(entity);
@@ -34,8 +43,8 @@ namespace Timetracker.Core.Infrastructure.Data
         public virtual void Delete<TEntity>(TEntity entity)
             where TEntity : class, IEntity
         {
-            var dbSet = context.Set<TEntity>();
-            if (context.Entry(entity).State == EntityState.Detached)
+            var dbSet = _context.Set<TEntity>();
+            if (_context.Entry(entity).State == EntityState.Detached)
             {
                 dbSet.Attach(entity);
             }
@@ -47,7 +56,7 @@ namespace Timetracker.Core.Infrastructure.Data
         {
             try
             {
-                context.SaveChanges();
+                _context.SaveChanges();
             }
             catch (Exception e)
             {
@@ -59,7 +68,7 @@ namespace Timetracker.Core.Infrastructure.Data
         {
             try
             {
-                return  await context.SaveChangesAsync().ConfigureAwait(false);
+                return  await _context.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (Exception e)
             {
