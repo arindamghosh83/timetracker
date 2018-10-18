@@ -41,4 +41,28 @@ input.ng-invalid.ng-touched {
 
 #effort-date-range {
   background-color: whitesmoke;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  text-align:center;
+  font-size: medium;
+}
+#effort-date-range-icons {
+  font-size: large;
+}
+.formFieldInvalidClass {
+  border: 1px solid $red !important;
+}
+
+@media (min-width: 768px) {
+  #effort-date-range {
+    background-color: whitesmoke;
+    text-align:center;
+    font-size: large;
+    padding-top: 0%;
+    padding-bottom: 0%;
+  }
+  
+#effort-date-range-icons {
+  font-size: small;
+}
 }

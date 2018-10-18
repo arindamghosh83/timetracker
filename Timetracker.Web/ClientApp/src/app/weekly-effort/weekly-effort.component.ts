@@ -22,6 +22,8 @@ export class WeeklyEffortComponent implements OnInit {
   displayEndDate: string;
   username: string;
   dataLoaded: boolean;
+  nextEffortAvailable: boolean;
+  previousEffortAvailable: boolean;
 
   constructor(
     private toastr: ToastrService,
@@ -30,6 +32,8 @@ export class WeeklyEffortComponent implements OnInit {
   ) {
     this.currentEffort = <IWeeklyEffort>{ weekStartDate: '', weekEndDate: '', efforts: [] };
     this.dataLoaded = false;
+    this.nextEffortAvailable = false;
+    this.previousEffortAvailable = true;
   }
   ngOnInit(): void {
 
@@ -90,7 +94,8 @@ export class WeeklyEffortComponent implements OnInit {
       this.totalEffort = this.getTotalEffort(this.currentEffort.efforts);
       this.displayStartDate = this.getDisplayDate(this.currentEffort.weekStartDate);
       this.displayEndDate = this.getDisplayDate(this.currentEffort.weekEndDate);
-    }
+      this.adjustWeekButton();
+    } 
   }
   previousEffort() {
     if (this.efforts[this.effortWeekCounter + 1]) {
@@ -99,6 +104,20 @@ export class WeeklyEffortComponent implements OnInit {
       this.totalEffort = this.getTotalEffort(this.currentEffort.efforts);
       this.displayStartDate = this.getDisplayDate(this.currentEffort.weekStartDate);
       this.displayEndDate = this.getDisplayDate(this.currentEffort.weekEndDate);
+      this.adjustWeekButton();
+    } 
+  }
+  adjustWeekButton()
+  {
+    if(this.effortWeekCounter == (this.efforts.length - 1)){
+      this.previousEffortAvailable = false;
+    } else {
+      this.previousEffortAvailable = true;
+    }
+    if(this.effortWeekCounter == 0){
+      this.nextEffortAvailable = false;
+    } else {
+      this.nextEffortAvailable = true;
     }
   }
   addEffort() {
@@ -139,6 +158,9 @@ export class WeeklyEffortComponent implements OnInit {
         if (!effortList[i].isDeleted && effortList[i].project && effortList[i].project.id != 0)
           effortTotal += effortList[i].effortPercent;
       }
+    }
+    if(effortTotal > 999){
+      return 0;
     }
     return effortTotal;
   }

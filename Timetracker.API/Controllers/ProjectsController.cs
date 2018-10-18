@@ -36,7 +36,7 @@ namespace Timetracker.API.Controllers
         public async Task<ActionResult<IActionResult>> Get()
         {
             var projects = await _projectRepository.GetAllAsync<Project>();
-            return new OkObjectResult(projects);
+            return new OkObjectResult(projects.OrderBy(x => x.Description));
         }
 
         [HttpPost]

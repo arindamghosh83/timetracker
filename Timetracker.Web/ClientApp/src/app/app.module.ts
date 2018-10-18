@@ -19,6 +19,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { LogoutComponent } from './logout/logout.component';
+import { NumberOnlyDirective } from './directives/number-only.directive';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,7 +29,8 @@ import { LogoutComponent } from './logout/logout.component';
     WeeklyEffortComponent,
     CounterComponent,
     FetchDataComponent,
-    EfforRowComponent
+    EfforRowComponent,
+    NumberOnlyDirective
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

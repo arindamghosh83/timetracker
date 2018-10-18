@@ -3,15 +3,13 @@
 </div>
 <div class="container" id="efforts-container" *ngIf="dataLoaded">
   <div class="row" id="effort-date-range">
-    <div class="col-12 text-center">
-      <i class="fa fa-arrow-circle-left fa-2x text-primary pr-2 " (click)="previousEffort()"></i>
+        <div class="col-2 col-lg-4 text-right" id="effort-date-range-icons"><i class="fa fa-arrow-circle-left fa-3x text-primary pr-2 " (click)="previousEffort()" *ngIf="previousEffortAvailable"></i> </div>
 
-      <span class="label label-info"><b>{{displayStartDate}} <i class="fa fa-arrows-h" aria-hidden="true"></i>
-          {{displayEndDate}}</b></span>
+      <div class="col-8 col-lg-4 text-center"><span class="label label-info"><b>{{displayStartDate}} <i class="fa fa-arrows-h " aria-hidden="true"></i> 
+          {{displayEndDate}}</b></span></div>
 
-      <i class="fa fa-arrow-circle-right fa-2x text-primary pr-2" (click)="nextEffort()"></i>
+          <div class="col-2 col-lg-4 text-left" id="effort-date-range-icons"><i class="fa fa-arrow-circle-right fa-3x text-primary pr-2" (click)="nextEffort()" *ngIf="nextEffortAvailable"></i> </div>
     </div>
-  </div>
   <div class="row">
     
     <div class="col-8 text-center">
@@ -39,19 +37,19 @@
 
   <div class="row">
     <div class="col-8 text-right">
-      <button id="updateEffort" class="btn btn-success" (click)="saveEffort()" [disabled]="totalEffort != 100">
+      <button id="updateEffort" class="btn btn-success" (click)="saveEffort()" [hidden]="totalEffort != 100">
         Update Effort
       </button>
     </div>
     <div class="col-3  text-left">
-      <input type="text" class="form-control" name="totalEffort" [ngModel]="totalEffort" disabled required>
+      <input type="text" class="form-control" [ngClass]="{formFieldInvalidClass: totalEffort != 100}" name="totalEffort" [ngModel]="totalEffort" disabled required>
     </div>
   </div>
   <div class="row">
+  <div class="col-11 text-right text-wrap">
+    <h3><span class="badge badge-pill badge-warning" *ngIf="totalEffort != 100"><b>Total Effort Must Be 100% to Complete This Action</b></span></h3>
   </div>
-  <div class="col-8 text-right">
-    <span class="badge badge-pill badge-warning" *ngIf="totalEffort > 100">Effort Must Be 100%</span>
-  </div>
-  <div class="col-3  text-left">
-  </div>
+  <div class="col-1">
+    </div>
+</div>
 </div>
