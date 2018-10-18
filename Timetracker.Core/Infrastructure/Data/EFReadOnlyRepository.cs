@@ -28,6 +28,11 @@ namespace Timetracker.Core.Infrastructure
             return GetQueryable<TEntity>(filter,"").ToList();
         }
 
+        public Task<TEntity> GetByIdAsync<TEntity>(int id) where TEntity : class, IEntity
+        {
+            var x = _context.Set<TEntity>().AsNoTracking();
+            return x.FirstOrDefaultAsync(effort => effort.Id.Equals(id));
+        }
         protected virtual IQueryable<TEntity> GetQueryable<TEntity>(
         Expression<Func<TEntity, bool>> filter = null,
         string includeProperties = null)

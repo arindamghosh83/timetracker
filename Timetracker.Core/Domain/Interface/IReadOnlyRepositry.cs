@@ -12,6 +12,8 @@ namespace Timetracker.Core.Domain.Interface
         Task<IEnumerable<TEntity>> GetAllAsync<TEntity>(
             Expression<Func<TEntity, bool>> filter = null)
             where TEntity : class, IEntity;
+        Task<TEntity> GetByIdAsync<TEntity>(int id)
+            where TEntity : class, IEntity;
 
     }
 

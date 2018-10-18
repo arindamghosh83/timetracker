@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Timetracker.Core.Domain.Interface;
 using TimeTracker.Core.Domain.Interface;
 using TimeTracker.Core.Domain.Model;
 using TimeTracker.Core.Infrastructure.Data;

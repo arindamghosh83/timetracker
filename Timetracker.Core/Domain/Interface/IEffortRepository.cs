@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Timetracker.Core.Domain.Interface;
 using TimeTracker.Core.Domain.Model;
 
 namespace TimeTracker.Core.Domain.Interface

@@ -1,39 +1,46 @@
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using Microsoft.Extensions.Logging;
 using Timetracker.Core.Domain.Interface;
 using Timetracker.Core.Domain.Model;
 using Timetracker.Core.DTO;
 using Timetracker.Core.Utilities;
 using TimeTracker.Core.Domain.Interface;
 using TimeTracker.Core.Domain.Model;
-using Willezone.Azure.WebJobs.Extensions.DependencyInjection;
 
-namespace Timetracker.Functions.Api
+namespace Timetracker.API.Controllers
 {
-    //[DependencyInjectionConfig(typeof(DIConfig))]
-    public static class ActivityApi
+    [Authorize]
+    [Produces("application/json")]
+    [Route("api/v1/[controller]")]
+    [EnableCors("AllowAllHeaders")]
+    [ApiController] 
+    public class EffortsController : ControllerBase
     {
-        /// <summary>
-        /// get list of activities/efforts
-        /// </summary>
-        /// <param name="req"></param>
-        /// <param name="log"></param>
-        /// <param name="effortRepository"></param>
-        /// <returns></returns>
-        [FunctionName("GetActivities")]
-        public static async Task<IActionResult> GetActivities([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "GetActivities/{personId}")]HttpRequest req, ILogger log, string personId, [Inject]IEffortRepository effortRepository)
-        {
+        private readonly IEffortRepository _effortRepository;
+        private readonly IReadOnlyRepositry _readOnlyRepositry;
+        private readonly IRepository _repository;
 
+        public EffortsController(IEffortRepository effortRepository, IRepository repository, IReadOnlyRepositry readOnlyRepositry)
+        {
+            _effortRepository = effortRepository;
+            _readOnlyRepositry = readOnlyRepositry;
+            _repository = repository;
+        }
+
+        [HttpGet("{personId}")] //todo sync with arindam then remove
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<IActionResult>> Get(string personId)
+        {
             ValueTuple<DateTime, DateTime>[] dateRanges = new ValueTuple<DateTime, DateTime>[4];
             var today = DateTime.Today;
             var firstWeekStartDate = today.Current().startDate; // Current week
@@ -47,7 +54,7 @@ namespace Timetracker.Functions.Api
             var fourthWeekStartDate = thirdWeekStartDate.Previous().startDate; // Previous/Last Monday 4thweek 
             //dateRanges[3] = thirdWeekStartDate.Previous();
             dateRanges[3] = dateRanges[2].Item1.PreviousWeek(dateRanges[2].Item2);
-            var combinedEffort = await effortRepository.GetEffortForDateRange(personId, dateRanges[3].Item1, dateRanges[0].Item2);
+            var combinedEffort = await _effortRepository.GetEffortForDateRange(personId, dateRanges[3].Item1, dateRanges[0].Item2);
 
             var currentWeekEffort = combinedEffort.Where(effort => effort.StartDate >= dateRanges[0].Item1 && effort.EndDate <= dateRanges[0].Item2);
             var secondWeekEffort = combinedEffort.Where(effort => effort.StartDate >= dateRanges[1].Item1 && effort.EndDate <= dateRanges[1].Item2);
@@ -85,41 +92,36 @@ namespace Timetracker.Functions.Api
                 }
             };
 
-            return new OkObjectResult(dto);
-
+            return new OkObjectResult(dto.Activities);
         }
 
-        /// <summary>
-        /// Insert/Update/Delete efforts
-        /// </summary>
-        /// <param name="req"></param>
-        /// <param name="log"></param>
-        /// <returns></returns>
-	    [FunctionName("UpsertActivities")]
-        public static async Task<IActionResult> UpsertActivities([HttpTrigger(AuthorizationLevel.Function, "post", Route = "upsertactivities")]HttpRequest req, [Inject]IRepository effortRepository, [Inject]IReadOnlyRepositry repo, ILogger log)
+        [HttpPost]
+        [ProducesResponseType((int) HttpStatusCode.OK)]
+        [ProducesResponseType((int) HttpStatusCode.NoContent)]
+        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<IActionResult>> Post(ActivityUpsertDTO activitiesToBeUpserted)
         {
-            string requestBody = new StreamReader(req.Body).ReadToEnd();
-            var activitiesToBeUpserted = JsonConvert.DeserializeObject<ActivityUpsertDTO>(requestBody);
-            var effortsToBeInserted = activitiesToBeUpserted.Efforts.Where(e => e.Id == 0);
-            var effortsToBeUpdated = activitiesToBeUpserted.Efforts.Where(e => e.Id != 0 && !e.IsDeleted);
-            var effortsToBeDeleted = activitiesToBeUpserted.Efforts.Where(e => e.Id != 0 && e.IsDeleted);
+            var effortsToBeInserted = activitiesToBeUpserted.Efforts.Where(e => e.Id == 0 && e.ProjectId > 0);
+            var effortsToBeUpdated = activitiesToBeUpserted.Efforts.Where(e => e.Id != 0 && !e.IsDeleted && e.ProjectId > 0);
+            var effortsToBeDeleted = activitiesToBeUpserted.Efforts.Where(e => e.Id != 0 && e.IsDeleted && e.ProjectId > 0);
 
             // Insert effort collection
             foreach (var insertedEffortDTO in effortsToBeInserted)
             {
                 Effort insertedEffort = EffortUpsertDTO.EffortBuilder(insertedEffortDTO, activitiesToBeUpserted.WeekStartDate, activitiesToBeUpserted.WeekEndDate, null);
-                effortRepository.Create(insertedEffort);
+                _repository.Create(insertedEffort);
             }
 
             // Update effort collection
             foreach (var updatedEffortDTO in effortsToBeUpdated)
             {
-                var existingEffort = await repo.GetByIdAsync<Effort>(updatedEffortDTO.Id);
+                var existingEffort = await _readOnlyRepositry.GetByIdAsync<Effort>(updatedEffortDTO.Id);
+
                 if (existingEffort != null)
                 {
                     Effort updatedEffort = EffortUpsertDTO.EffortBuilder(updatedEffortDTO,
                         activitiesToBeUpserted.WeekStartDate, activitiesToBeUpserted.WeekEndDate, existingEffort);
-                    effortRepository.Update(updatedEffort);
+                    _repository.Update(updatedEffort);
                 }
             }
 
@@ -127,18 +129,16 @@ namespace Timetracker.Functions.Api
             foreach (var deletedEffortDTO in effortsToBeDeleted)
             {
                 Effort deletedEffort = EffortUpsertDTO.EffortBuilder(deletedEffortDTO, activitiesToBeUpserted.WeekStartDate, activitiesToBeUpserted.WeekEndDate, null);
-                effortRepository.Delete<Effort>(deletedEffort.Id);
+                _repository.Delete<Effort>(deletedEffort.Id);
             }
 
-            int numberofOperations = await effortRepository.SaveAsync();
+            int numberofOperations = await _repository.SaveAsync();
 
 
             return numberofOperations > 0
                 ? (ActionResult)new OkObjectResult($"{numberofOperations} succeeded")
                 : new BadRequestObjectResult("Something went wrong in payload");
         }
-
-
 
     }
 }
