@@ -1,7 +1,6 @@
 import { Component, Output, Input, OnInit } from '@angular/core';
 import { IWeeklyEffort, IEffort, IProject } from '../models/effort.model';
 import { ToastrService } from 'ngx-toastr';
-import * as moment from 'moment';
 import { DataProvider } from '../data-provider'
 import { EffortService } from '../services/effort.service'
 import { AdalService } from '../services/adal.service';
@@ -13,13 +12,12 @@ import { AdalService } from '../services/adal.service';
 export class WeeklyEffortComponent implements OnInit {
   efforts: IWeeklyEffort[];
   currentEffort: IWeeklyEffort;
+  currentEffortIsDirty: boolean;
   effortWeekCounter: number;
   totalEffort: number;
   outgoingEffort: IEffort;
   projects: any;
   selectedProjects: any;
-  displayStartDate: string;
-  displayEndDate: string;
   username: string;
   dataLoaded: boolean;
   nextEffortAvailable: boolean;
@@ -31,12 +29,17 @@ export class WeeklyEffortComponent implements OnInit {
     private adalService: AdalService
   ) {
     this.currentEffort = <IWeeklyEffort>{ weekStartDate: '', weekEndDate: '', efforts: [] };
+    this.currentEffortIsDirty = false;
     this.dataLoaded = false;
     this.nextEffortAvailable = false;
     this.previousEffortAvailable = true;
+    this.projects = [];
+    this.efforts = [];
   }
   ngOnInit(): void {
-
+    this.initiateAppState(0, true);
+  }
+  initiateAppState(weekIndex: number, intialLoad: boolean) {
     this.getUserName();
 
     this.service.getAllProjects().subscribe(
@@ -57,10 +60,12 @@ export class WeeklyEffortComponent implements OnInit {
 
                 this.assignSelectableProjects(this.efforts);
 
-                this.effortWeekCounter = 0;
+                this.effortWeekCounter = weekIndex;
                 this.currentEffort = this.efforts[this.effortWeekCounter];
-                this.displayStartDate = this.getDisplayDate(this.currentEffort.weekStartDate);
-                this.displayEndDate = this.getDisplayDate(this.currentEffort.weekEndDate);
+
+                if (this.currentEffort.efforts && this.currentEffort.efforts.length == 0 && intialLoad) {
+                  this.addDefaultProjectsFromPreviousWeek();
+                }
                 this.totalEffort = this.getTotalEffort(this.currentEffort.efforts);
               }
             },
@@ -73,17 +78,46 @@ export class WeeklyEffortComponent implements OnInit {
 
       }
     );
-
   }
 
-  getDisplayDate(date) {
-    return moment(date).format('MM/DD/YYYY');
+  getDisplayDate(date){
+    if(date.indexOf("T") >= 0){
+    return date.substring(0, date.indexOf("T"));
+    } 
+    return date;
   }
+  addDefaultProjectsFromPreviousWeek() {
+    if (this.efforts[this.effortWeekCounter + 1] && this.efforts[this.effortWeekCounter + 1].efforts) {
+      if (this.efforts[this.effortWeekCounter + 1].efforts.length == 0) {
+        this.addEffort();
+      } else {
+        for (var i = 0; i < this.efforts[this.effortWeekCounter + 1].efforts.length; i++) {
+          this.efforts[this.effortWeekCounter].efforts.push(<IEffort>{
+            id: 0,
+            isDeleted: false,
+            isNew: true,
+            project: <IProject>{
+              id: this.efforts[this.effortWeekCounter + 1].efforts[i].project.id,
+              active: this.efforts[this.effortWeekCounter + 1].efforts[i].project.active,
+              description: this.efforts[this.effortWeekCounter + 1].efforts[i].project.description
+            },
+            selectableProjects: this.getSelectableProjects(this.projects,
+              this.getSelectedProjectsForWeeklyEffort(this.currentEffort.efforts),
+              this.efforts[this.effortWeekCounter + 1].efforts[i].project)
+          });
+        }
+      }
+    }
+  }
+
   effortUpdate(outgoingEffort: IEffort) {
-    this.totalEffort = this.getTotalEffort(this.currentEffort.efforts);
+    this.currentEffortIsDirty = true;
+
     if (!outgoingEffort.project.description || outgoingEffort.project.description.length == 0) {
       outgoingEffort.project.description = this.getProjectDescription(outgoingEffort.project.id);
     }
+
+    this.totalEffort = this.getTotalEffort(this.currentEffort.efforts);
     this.updateSelectableProjects();
   }
 
@@ -91,43 +125,44 @@ export class WeeklyEffortComponent implements OnInit {
     if (this.efforts[this.effortWeekCounter - 1]) {
       this.effortWeekCounter -= 1
       this.currentEffort = this.efforts[this.effortWeekCounter];
+      if (!this.currentEffort.efforts || this.currentEffort.efforts.length == 0) {
+        this.addEffort();
+      }
       this.totalEffort = this.getTotalEffort(this.currentEffort.efforts);
-      this.displayStartDate = this.getDisplayDate(this.currentEffort.weekStartDate);
-      this.displayEndDate = this.getDisplayDate(this.currentEffort.weekEndDate);
       this.adjustWeekButton();
-    } 
+    }
   }
   previousEffort() {
     if (this.efforts[this.effortWeekCounter + 1]) {
       this.effortWeekCounter += 1
       this.currentEffort = this.efforts[this.effortWeekCounter];
+      if (!this.currentEffort.efforts || this.currentEffort.efforts.length == 0) {
+        this.addEffort();
+      }
       this.totalEffort = this.getTotalEffort(this.currentEffort.efforts);
-      this.displayStartDate = this.getDisplayDate(this.currentEffort.weekStartDate);
-      this.displayEndDate = this.getDisplayDate(this.currentEffort.weekEndDate);
       this.adjustWeekButton();
-    } 
+    }
   }
-  adjustWeekButton()
-  {
-    if(this.effortWeekCounter == (this.efforts.length - 1)){
+  adjustWeekButton() {
+    if (this.effortWeekCounter == (this.efforts.length - 1)) {
       this.previousEffortAvailable = false;
     } else {
       this.previousEffortAvailable = true;
     }
-    if(this.effortWeekCounter == 0){
+    if (this.effortWeekCounter == 0) {
       this.nextEffortAvailable = false;
     } else {
       this.nextEffortAvailable = true;
     }
   }
   addEffort() {
+    this.currentEffortIsDirty = true;
     var newEffort = (<IEffort>{
       id: 0,
       project: {
         description: "",
         id: 0
       },
-      effortPercent: 0,
       isDeleted: false,
       selectableProjects: this.getSelectableProjects(this.projects, this.getSelectedProjectsForWeeklyEffort(this.currentEffort.efforts), <IProject>{
         description: "",
@@ -138,28 +173,33 @@ export class WeeklyEffortComponent implements OnInit {
   }
 
   saveEffort() {
-    var response$ = this.service.saveEfforts(this.currentEffort, this.username);
-    response$.subscribe(response => {
-      if (response && (response.status == 200 || response.status == 201)) {
-        this.toastr.success('Efforts Updated', 'Saved!');
-      } else {
+    if (this.currentEffortIsDirty) {
+      var response$ = this.service.saveEfforts(this.currentEffort, this.username);
+      response$.subscribe(response => {
+        if (response && (response.status == 200 || response.status == 201)) {
+          this.toastr.success('Efforts Updated', 'Saved!');
+          this.initiateAppState(this.effortWeekCounter, false);
+          this.currentEffortIsDirty = false;
+        } else {
+          this.toastr.error('Effort Update Failed. Please contact Support.', 'Unable to Save.');
+        }
+      }, error => {
+        console.log(error);
         this.toastr.error('Effort Update Failed. Please contact Support.', 'Unable to Save.');
-      }
-    }, error => {
-      console.log(error);
-      this.toastr.error('Effort Update Failed. Please contact Support.', 'Unable to Save.');
-    });
+      });
+    }
   }
 
   getTotalEffort(effortList) {
     var effortTotal = 0;
     if (effortList) {
       for (var i = 0; i < effortList.length; i++) {
-        if (!effortList[i].isDeleted && effortList[i].project && effortList[i].project.id != 0)
+        if (!effortList[i].isDeleted && effortList[i].project && effortList[i].project.id != 0 && effortList[i].effortPercent) {
           effortTotal += effortList[i].effortPercent;
+        }
       }
     }
-    if(effortTotal > 999){
+    if (effortTotal > 999) {
       return 0;
     }
     return effortTotal;

@@ -5,8 +5,9 @@
   <div class="row" id="effort-date-range">
         <div class="col-2 col-lg-4 text-right" id="effort-date-range-icons"><i class="fa fa-arrow-circle-left fa-3x text-primary pr-2 " (click)="previousEffort()" *ngIf="previousEffortAvailable"></i> </div>
 
-      <div class="col-8 col-lg-4 text-center"><span class="label label-info"><b>{{displayStartDate}} <i class="fa fa-arrows-h " aria-hidden="true"></i> 
-          {{displayEndDate}}</b></span></div>
+      <div class="col-8 col-lg-4 text-center"><span class="label label-info"><b>
+        {{getDisplayDate(currentEffort.weekStartDate) | date:'MM/dd/yy' }} <i class="fa fa-arrows-h " aria-hidden="true"></i> 
+        {{getDisplayDate(currentEffort.weekEndDate) | date:'MM/dd/yy' }} </b></span></div>
 
           <div class="col-2 col-lg-4 text-left" id="effort-date-range-icons"><i class="fa fa-arrow-circle-right fa-3x text-primary pr-2" (click)="nextEffort()" *ngIf="nextEffortAvailable"></i> </div>
     </div>

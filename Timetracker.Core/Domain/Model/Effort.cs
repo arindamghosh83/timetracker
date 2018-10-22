@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using Timetracker.Core.Domain;
 using Timetracker.Core.Domain.Model;
 
 namespace TimeTracker.Core.Domain.Model

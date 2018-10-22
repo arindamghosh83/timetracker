@@ -13,7 +13,7 @@ export class NavMenuComponent implements OnInit {
 
 
   ngOnInit(): void {
-     (this.title = "Time Tracker");
+     (this.title = "Effort Tracker");
 
   }
 }

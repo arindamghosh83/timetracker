@@ -17,6 +17,13 @@ namespace TimeTracker.Core.Infrastructure.Data
             
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Effort>()
+                .HasIndex(p => new { p.ProjectId, p.UserId, p.StartDate, p.EndDate })
+                .IsUnique(true);
+        }
+
         public DbSet<Effort> Effort { get; set; }
         public DbSet<Project> Project { get; set; }
         public DbSet<Person> Person { get; set; }
