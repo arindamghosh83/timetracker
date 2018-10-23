@@ -57,6 +57,9 @@ export class EffortService {
 
     for (var i = 0; i < weeklyEffort.efforts.length; i++) {
       if (weeklyEffort.efforts[i].project.id > 0 && weeklyEffort.efforts[i].effortPercent && weeklyEffort.efforts[i].effortPercent > 0) {
+        if(weeklyEffort.efforts[i].id == 0 && weeklyEffort.efforts[i].isDeleted == true){
+          //Skip this effort because it was created and then deleted at client site.
+        } else {
         requestEfforts.push(<IEffortUpsertRequest>{
           effortPercent: weeklyEffort.efforts[i].effortPercent,
           isDeleted: weeklyEffort.efforts[i].isDeleted == true,
@@ -64,6 +67,7 @@ export class EffortService {
           id: weeklyEffort.efforts[i].id,
           createdBy: userName
         });
+      }
       }
     }
 

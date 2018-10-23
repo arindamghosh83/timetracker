@@ -44,9 +44,9 @@ li.link-active a:focus {
 
 
 #navbar-title-container{
-    padding-top: 10px;
     text-align: center;
     color: $white;
+    font-size: medium;
 }
 
 .hemnavitem{
@@ -54,7 +54,8 @@ li.link-active a:focus {
 }
 
 #nav-item-username {
-    @extend #navbar-title-container;
+    text-align: center;
+    color: $white;
 }
 
 
@@ -89,5 +90,9 @@ li.link-active a:focus {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+    #navbar-title-container{
+        
+        font-size: x-large;
     }
 }

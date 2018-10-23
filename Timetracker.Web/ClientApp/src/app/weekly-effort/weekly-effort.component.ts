@@ -187,6 +187,8 @@ export class WeeklyEffortComponent implements OnInit {
         console.log(error);
         this.toastr.error('Effort Update Failed. Please contact Support.', 'Unable to Save.');
       });
+    } else {
+      this.toastr.success('Efforts Updated', 'Saved!');
     }
   }
 
