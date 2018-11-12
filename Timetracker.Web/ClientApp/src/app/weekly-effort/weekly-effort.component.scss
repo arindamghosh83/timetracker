@@ -34,8 +34,9 @@ input.ng-invalid.ng-touched {
   background-color: $light-light-light-blue;
 }
 #efforts-container {
-  overflow-x: hidden;
-  overflow-y: auto;
+  // overflow-x: hidden;
+  // overflow-y: auto;
+  overflow: unset;
   padding-bottom: 40px;
 }
 

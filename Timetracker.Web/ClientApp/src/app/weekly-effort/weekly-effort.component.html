@@ -1,23 +1,25 @@
-<div class="container text-center"  *ngIf="!dataLoaded">
+<div class="container text-center" *ngIf="!dataLoaded">
   Loading..<span class="fa fa-spinner fa-spin fa-3x"></span>
 </div>
 <div class="container" id="efforts-container" *ngIf="dataLoaded">
   <div class="row" id="effort-date-range">
-        <div class="col-2 col-lg-4 text-right" id="effort-date-range-icons"><i class="fa fa-arrow-circle-left fa-3x text-primary pr-2 " (click)="previousEffort()" *ngIf="previousEffortAvailable"></i> </div>
+    <div class="col-2 col-lg-4 text-right" id="effort-date-range-icons"><i class="fa fa-arrow-circle-left fa-3x text-primary pr-2 "
+        (click)="previousEffort()" *ngIf="previousEffortAvailable"></i> </div>
 
-      <div class="col-8 col-lg-4 text-center"><span class="label label-info"><b>
-        {{getDisplayDate(currentEffort.weekStartDate) | date:'MM/dd/yy' }} <i class="fa fa-arrows-h " aria-hidden="true"></i> 
-        {{getDisplayDate(currentEffort.weekEndDate) | date:'MM/dd/yy' }} </b></span></div>
+    <div class="col-8 col-lg-4 text-center"><span class="label label-info"><b>
+          {{getDisplayDate(currentEffort.weekStartDate) | date:'MM/dd/yy' }} <i class="fa fa-arrows-h " aria-hidden="true"></i>
+          {{getDisplayDate(currentEffort.weekEndDate) | date:'MM/dd/yy' }} </b></span></div>
 
-          <div class="col-2 col-lg-4 text-left" id="effort-date-range-icons"><i class="fa fa-arrow-circle-right fa-3x text-primary pr-2" (click)="nextEffort()" *ngIf="nextEffortAvailable"></i> </div>
-    </div>
+    <div class="col-2 col-lg-4 text-left" id="effort-date-range-icons"><i class="fa fa-arrow-circle-right fa-3x text-primary pr-2"
+        (click)="nextEffort()" *ngIf="nextEffortAvailable"></i> </div>
+  </div>
   <div class="row">
-    
+
     <div class="col-8 text-center">
       <h1>Project</h1>
-      
+
     </div>
-    
+
     <div class="col-3  text-center">
       <h1>
         <span class="text-nowrap">Effort(%)</span>
@@ -27,7 +29,7 @@
     </div>
   </div>
   <app-effort-row *ngFor="let effort of currentEffort.efforts;  index as i" [effortrow]="effort" [effortindex]="i"
-    (outgoingEffort)="effortUpdate($event)"></app-effort-row>
+    (outgoingEffort)="effortUpdate($event)" [allProjects]="projects"></app-effort-row>
 
   <div class="row">
     <div class="col-8 text-left">
@@ -43,14 +45,17 @@
       </button>
     </div>
     <div class="col-3  text-left">
-      <input type="text" class="form-control" [ngClass]="{formFieldInvalidClass: totalEffort != 100}" name="totalEffort" [ngModel]="totalEffort" disabled required>
+      <input type="text" class="form-control" [ngClass]="{formFieldInvalidClass: totalEffort != 100}" name="totalEffort"
+        [ngModel]="totalEffort" disabled required>
     </div>
   </div>
   <div class="row">
-  <div class="col-11 text-right text-wrap">
-    <h3><span class="badge badge-pill badge-warning" *ngIf="totalEffort != 100"><b>Total Effort Must Be 100% to Complete This Action</b></span></h3>
-  </div>
-  <div class="col-1">
+    <div class="col-11 text-right text-wrap">
+      <h3><span class="badge badge-pill badge-warning" *ngIf="totalEffort != 100"><b>Total Effort Must Be 100% to
+            Complete This Action</b></span></h3>
     </div>
-</div>
+    <div class="col-1">
+    </div>
+  </div>
+
 </div>
