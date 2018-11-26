@@ -5,6 +5,8 @@ import { Pipe, PipeTransform } from "@angular/core";
 })
 export class ProjectDataSourceDescriptionPipe implements PipeTransform {
   transform(value: any, args?: any): any {
-    return value.map(val => val.description);
+    if (value !== undefined) {
+      return value.map(val => val.description);
+    }
   }
 }

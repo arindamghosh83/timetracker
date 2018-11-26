@@ -1,0 +1,55 @@
+<div class="container" *ngIf="isProjectVisible">
+  <div class="row mt-2">
+    <div class="col-sm">Project Description</div>
+    <div class="col-sm">
+      <input
+        type="text"
+        class="form-control"
+        name="projectDescription"
+        [(ngModel)]="projectToBeEdited.description"
+        #projectDescription="ngModel"
+        required
+      />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm">Project Status</div>
+    <div class="col-sm">
+      <select
+        id="active"
+        class="form-control"
+        name="active"
+        [(ngModel)]="projectToBeEdited.active"
+        #active="ngModel"
+      >
+        <option [ngValue]="true">Active</option>
+        <option [ngValue]="false">Inactive</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm">Funding Status</div>
+    <div class="col-sm">
+      <select
+        id="funded"
+        class="form-control"
+        name="funded"
+        [(ngModel)]="projectToBeEdited.funded"
+        #active="ngModel"
+      >
+        <option [ngValue]="true">Funded</option>
+        <option [ngValue]="false">Not Funded</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div id="saveundocontainer">
+      <button class="btn btn-primary" (click)="saveProject()">
+        <i class="fa fa-save pr-2"></i>Save Project
+      </button>
+      <button class="btn btn-default" (click)="undo()">
+        <i class="fa fa-undo text-danger undoClass pr-2"></i>Cancel
+      </button>
+    </div>
+  </div>
+</div>

@@ -55,8 +55,8 @@ namespace Timetracker.API.Controllers
                 _repository.Create(project);
                 numberofOperations = await _repository.SaveAsync();
                 return numberofOperations > 0
-                    ? (ActionResult)new OkObjectResult($"Project created with id {project.Id}")
-                    : new BadRequestObjectResult("Something went wrong");
+                    ? (ActionResult)new OkObjectResult(new { Id = project.Id })
+                    : new BadRequestObjectResult("Something went wrong");               
             }
 
             var existingProject = await _projectRepository.GetByIdAsync<Project>(project.Id);

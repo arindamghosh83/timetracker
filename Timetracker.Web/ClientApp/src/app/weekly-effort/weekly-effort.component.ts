@@ -1,13 +1,14 @@
-import { Component, Output, Input, OnInit } from '@angular/core';
-import { IWeeklyEffort, IEffort, IProject } from '../models/effort.model';
-import { ToastrService } from 'ngx-toastr';
-import { DataProvider } from '../data-provider'
-import { EffortService } from '../services/effort.service'
-import { AdalService } from '../services/adal.service';
+import { Component, Output, Input, OnInit } from "@angular/core";
+import { IWeeklyEffort, IEffort, IProject } from "../models/effort.model";
+import { ToastrService } from "ngx-toastr";
+import { DataProvider } from "../data-provider";
+import { EffortService } from "../services/effort.service";
+import { AdalService } from "../services/adal.service";
+import { AppInsightsService } from "../services/app-insights.service";
 @Component({
-  selector: 'weekly-effort',
-  styleUrls: ['./weekly-effort.component.scss'],
-  templateUrl: './weekly-effort.component.html'
+  selector: "weekly-effort",
+  styleUrls: ["./weekly-effort.component.scss"],
+  templateUrl: "./weekly-effort.component.html"
 })
 export class WeeklyEffortComponent implements OnInit {
   efforts: IWeeklyEffort[];
@@ -26,9 +27,14 @@ export class WeeklyEffortComponent implements OnInit {
   constructor(
     private toastr: ToastrService,
     private service: EffortService,
-    private adalService: AdalService
+    private adalService: AdalService,
+    private appInsightsService: AppInsightsService
   ) {
-    this.currentEffort = <IWeeklyEffort>{ weekStartDate: '', weekEndDate: '', efforts: [] };
+    this.currentEffort = <IWeeklyEffort>{
+      weekStartDate: "",
+      weekEndDate: "",
+      efforts: []
+    };
     this.currentEffortIsDirty = false;
     this.dataLoaded = false;
     this.nextEffortAvailable = false;
@@ -45,9 +51,11 @@ export class WeeklyEffortComponent implements OnInit {
     this.service.getAllProjects().subscribe(
       allProjectsReceived => {
         if (allProjectsReceived && allProjectsReceived.length > 0) {
-          this.projects = allProjectsReceived;
+          this.projects = allProjectsReceived.filter(
+            project => project.active === true
+          );
           this.projects.push(<IProject>{
-            description: '',
+            description: "",
             id: 0,
             active: true
           });
@@ -55,7 +63,6 @@ export class WeeklyEffortComponent implements OnInit {
           this.service.getEfforts(this.username).subscribe(
             allEfforts => {
               if (allEfforts && this.projects && this.projects.length > 0) {
-
                 this.efforts = allEfforts;
 
                 this.assignSelectableProjects(this.efforts);
@@ -63,47 +70,64 @@ export class WeeklyEffortComponent implements OnInit {
                 this.effortWeekCounter = weekIndex;
                 this.currentEffort = this.efforts[this.effortWeekCounter];
 
-                if (this.currentEffort.efforts && this.currentEffort.efforts.length == 0 && intialLoad) {
+                if (
+                  this.currentEffort.efforts &&
+                  this.currentEffort.efforts.length == 0 &&
+                  intialLoad
+                ) {
                   this.addDefaultProjectsFromPreviousWeek();
                 }
-                this.totalEffort = this.getTotalEffort(this.currentEffort.efforts);
+                this.totalEffort = this.getTotalEffort(
+                  this.currentEffort.efforts
+                );
               }
             },
-            error => {
-            }
+            error => {}
           );
         }
       },
-      error => {
-
-      }
+      error => {}
     );
   }
 
-  getDisplayDate(date){
-    if(date.indexOf("T") >= 0){
-    return date.substring(0, date.indexOf("T"));
-    } 
+  getDisplayDate(date) {
+    if (date.indexOf("T") >= 0) {
+      return date.substring(0, date.indexOf("T"));
+    }
     return date;
   }
   addDefaultProjectsFromPreviousWeek() {
-    if (this.efforts[this.effortWeekCounter + 1] && this.efforts[this.effortWeekCounter + 1].efforts) {
+    if (
+      this.efforts[this.effortWeekCounter + 1] &&
+      this.efforts[this.effortWeekCounter + 1].efforts
+    ) {
       if (this.efforts[this.effortWeekCounter + 1].efforts.length == 0) {
         this.addEffort();
       } else {
-        for (var i = 0; i < this.efforts[this.effortWeekCounter + 1].efforts.length; i++) {
+        for (
+          var i = 0;
+          i < this.efforts[this.effortWeekCounter + 1].efforts.length;
+          i++
+        ) {
           this.efforts[this.effortWeekCounter].efforts.push(<IEffort>{
             id: 0,
             isDeleted: false,
             isNew: true,
             project: <IProject>{
-              id: this.efforts[this.effortWeekCounter + 1].efforts[i].project.id,
-              active: this.efforts[this.effortWeekCounter + 1].efforts[i].project.active,
-              description: this.efforts[this.effortWeekCounter + 1].efforts[i].project.description
+              id: this.efforts[this.effortWeekCounter + 1].efforts[i].project
+                .id,
+              active: this.efforts[this.effortWeekCounter + 1].efforts[i]
+                .project.active,
+              description: this.efforts[this.effortWeekCounter + 1].efforts[i]
+                .project.description
             },
-            selectableProjects: this.getSelectableProjects(this.projects,
-              this.getSelectedProjectsForWeeklyEffort(this.currentEffort.efforts),
-              this.efforts[this.effortWeekCounter + 1].efforts[i].project)
+            selectableProjects: this.getSelectableProjects(
+              this.projects,
+              this.getSelectedProjectsForWeeklyEffort(
+                this.currentEffort.efforts
+              ),
+              this.efforts[this.effortWeekCounter + 1].efforts[i].project
+            )
           });
         }
       }
@@ -113,8 +137,13 @@ export class WeeklyEffortComponent implements OnInit {
   effortUpdate(outgoingEffort: IEffort) {
     this.currentEffortIsDirty = true;
 
-    if (!outgoingEffort.project.description || outgoingEffort.project.description.length == 0) {
-      outgoingEffort.project.description = this.getProjectDescription(outgoingEffort.project.id);
+    if (
+      !outgoingEffort.project.description ||
+      outgoingEffort.project.description.length == 0
+    ) {
+      outgoingEffort.project.description = this.getProjectDescription(
+        outgoingEffort.project.id
+      );
     }
 
     this.totalEffort = this.getTotalEffort(this.currentEffort.efforts);
@@ -123,9 +152,12 @@ export class WeeklyEffortComponent implements OnInit {
 
   nextEffort() {
     if (this.efforts[this.effortWeekCounter - 1]) {
-      this.effortWeekCounter -= 1
+      this.effortWeekCounter -= 1;
       this.currentEffort = this.efforts[this.effortWeekCounter];
-      if (!this.currentEffort.efforts || this.currentEffort.efforts.length == 0) {
+      if (
+        !this.currentEffort.efforts ||
+        this.currentEffort.efforts.length == 0
+      ) {
         this.addEffort();
       }
       this.totalEffort = this.getTotalEffort(this.currentEffort.efforts);
@@ -134,9 +166,12 @@ export class WeeklyEffortComponent implements OnInit {
   }
   previousEffort() {
     if (this.efforts[this.effortWeekCounter + 1]) {
-      this.effortWeekCounter += 1
+      this.effortWeekCounter += 1;
       this.currentEffort = this.efforts[this.effortWeekCounter];
-      if (!this.currentEffort.efforts || this.currentEffort.efforts.length == 0) {
+      if (
+        !this.currentEffort.efforts ||
+        this.currentEffort.efforts.length == 0
+      ) {
         this.addEffort();
       }
       this.totalEffort = this.getTotalEffort(this.currentEffort.efforts);
@@ -144,7 +179,7 @@ export class WeeklyEffortComponent implements OnInit {
     }
   }
   adjustWeekButton() {
-    if (this.effortWeekCounter == (this.efforts.length - 1)) {
+    if (this.effortWeekCounter == this.efforts.length - 1) {
       this.previousEffortAvailable = false;
     } else {
       this.previousEffortAvailable = true;
@@ -157,38 +192,54 @@ export class WeeklyEffortComponent implements OnInit {
   }
   addEffort() {
     this.currentEffortIsDirty = true;
-    var newEffort = (<IEffort>{
+    var newEffort = <IEffort>{
       id: 0,
       project: {
         description: "",
         id: 0
       },
       isDeleted: false,
-      selectableProjects: this.getSelectableProjects(this.projects, this.getSelectedProjectsForWeeklyEffort(this.currentEffort.efforts), <IProject>{
-        description: "",
-        id: 0
-      })
-    });
+      selectableProjects: this.getSelectableProjects(
+        this.projects,
+        this.getSelectedProjectsForWeeklyEffort(this.currentEffort.efforts),
+        <IProject>{
+          description: "",
+          id: 0
+        }
+      )
+    };
     this.currentEffort.efforts.push(newEffort);
   }
 
   saveEffort() {
     if (this.currentEffortIsDirty) {
-      var response$ = this.service.saveEfforts(this.currentEffort, this.username);
-      response$.subscribe(response => {
-        if (response && (response.status == 200 || response.status == 201)) {
-          this.toastr.success('Efforts Updated', 'Saved!');
-          this.initiateAppState(this.effortWeekCounter, false);
-          this.currentEffortIsDirty = false;
-        } else {
-          this.toastr.error('Effort Update Failed. Please contact Support.', 'Unable to Save.');
+      var response$ = this.service.saveEfforts(
+        this.currentEffort,
+        this.username
+      );
+      response$.subscribe(
+        response => {
+          if (response && (response.status == 200 || response.status == 201)) {
+            this.toastr.success("Efforts Updated", "Saved!");
+            this.initiateAppState(this.effortWeekCounter, false);
+            this.currentEffortIsDirty = false;
+          } else {
+            this.toastr.error(
+              "Effort Update Failed. Please contact Support.",
+              "Unable to Save."
+            );
+          }
+        },
+        error => {
+          console.log(error);
+          this.toastr.error(
+            "Effort Update Failed. Please contact Support.",
+            "Unable to Save."
+          );
         }
-      }, error => {
-        console.log(error);
-        this.toastr.error('Effort Update Failed. Please contact Support.', 'Unable to Save.');
-      });
+      );
     } else {
-      this.toastr.success('Efforts Updated', 'Saved!');
+      this.toastr.success("Efforts Updated", "Saved!");
     }
   }
 
@@ -196,7 +247,12 @@ export class WeeklyEffortComponent implements OnInit {
     var effortTotal = 0;
     if (effortList) {
       for (var i = 0; i < effortList.length; i++) {
-        if (!effortList[i].isDeleted && effortList[i].project && effortList[i].project.id != 0 && effortList[i].effortPercent) {
+        if (
+          !effortList[i].isDeleted &&
+          effortList[i].project &&
+          effortList[i].project.id != 0 &&
+          effortList[i].effortPercent
+        ) {
           effortTotal += effortList[i].effortPercent;
         }
       }
@@ -207,11 +263,18 @@ export class WeeklyEffortComponent implements OnInit {
     return effortTotal;
   }
 
-  getSelectableProjects(allProjects: IProject[], excludedProjectIds: IProject[], currentProjectId: IProject) {
+  getSelectableProjects(
+    allProjects: IProject[],
+    excludedProjectIds: IProject[],
+    currentProjectId: IProject
+  ) {
     var foundSelectableProjects = [];
     if (allProjects) {
       for (var i = 0; i < allProjects.length; i++) {
-        if ((excludedProjectIds.filter(obj => obj.id == allProjects[i].id).length > 0)) {
+        if (
+          excludedProjectIds.filter(obj => obj.id == allProjects[i].id).length >
+          0
+        ) {
           if (currentProjectId.id == allProjects[i].id) {
             foundSelectableProjects.push(allProjects[i]);
           }
@@ -227,7 +290,10 @@ export class WeeklyEffortComponent implements OnInit {
     var foundSelectableProjects = [];
     if (weeklyEffortProjects) {
       for (var i = 0; i < weeklyEffortProjects.length; i++) {
-        if (!weeklyEffortProjects[i].isDeleted && weeklyEffortProjects[i].project.id != 0) {
+        if (
+          !weeklyEffortProjects[i].isDeleted &&
+          weeklyEffortProjects[i].project.id != 0
+        ) {
           foundSelectableProjects.push(weeklyEffortProjects[i].project);
         }
       }
@@ -236,19 +302,28 @@ export class WeeklyEffortComponent implements OnInit {
   }
 
   getProjectDescription(projectId: Number) {
-    for (var projectIndex = 0; projectIndex < this.projects.length; projectIndex++) {
+    for (
+      var projectIndex = 0;
+      projectIndex < this.projects.length;
+      projectIndex++
+    ) {
       if (this.projects[projectIndex].id == projectId) {
         return this.projects[projectIndex].description;
       }
     }
-    return '';
+    return "";
   }
 
   updateSelectableProjects() {
     for (var i = 0; i < this.currentEffort.efforts.length; i++) {
       if (!this.currentEffort.efforts[i].isDeleted) {
-        this.currentEffort.efforts[i].selectableProjects =
-          this.getSelectableProjects(this.projects, this.getSelectedProjectsForWeeklyEffort(this.currentEffort.efforts), this.currentEffort.efforts[i].project);
+        this.currentEffort.efforts[
+          i
+        ].selectableProjects = this.getSelectableProjects(
+          this.projects,
+          this.getSelectedProjectsForWeeklyEffort(this.currentEffort.efforts),
+          this.currentEffort.efforts[i].project
+        );
       }
     }
   }
@@ -256,12 +331,16 @@ export class WeeklyEffortComponent implements OnInit {
   addStartUpProjects() {
     if (this.efforts && this.efforts.length > 1) {
       if (this.efforts[0].efforts.length == 0) {
-        for (var effortIndex = 0; effortIndex < this.efforts[1].efforts.length; effortIndex++) {
-
+        for (
+          var effortIndex = 0;
+          effortIndex < this.efforts[1].efforts.length;
+          effortIndex++
+        ) {
           this.efforts[0].efforts.push(<IEffort>{
             id: 0,
             project: {
-              description: this.efforts[1].efforts[effortIndex].project.description,
+              description: this.efforts[1].efforts[effortIndex].project
+                .description,
               id: this.efforts[1].efforts[effortIndex].project.id
             },
             effortPercent: 0,
@@ -277,11 +356,20 @@ export class WeeklyEffortComponent implements OnInit {
     var foundSelectableProjects = [];
     if (allEfforts) {
       for (var weekIndex = 0; weekIndex < allEfforts.length; weekIndex++) {
-
-        for (var effortIndex = 0; effortIndex < allEfforts[weekIndex].efforts.length; effortIndex++) {
-
-          allEfforts[weekIndex].efforts[effortIndex].selectableProjects =
-            this.getSelectableProjects(this.projects, this.getSelectedProjectsForWeeklyEffort(allEfforts[weekIndex].efforts), allEfforts[weekIndex].efforts[effortIndex].project);
+        for (
+          var effortIndex = 0;
+          effortIndex < allEfforts[weekIndex].efforts.length;
+          effortIndex++
+        ) {
+          allEfforts[weekIndex].efforts[
+            effortIndex
+          ].selectableProjects = this.getSelectableProjects(
+            this.projects,
+            this.getSelectedProjectsForWeeklyEffort(
+              allEfforts[weekIndex].efforts
+            ),
+            allEfforts[weekIndex].efforts[effortIndex].project
+          );
         }
       }
     }
@@ -291,10 +379,10 @@ export class WeeklyEffortComponent implements OnInit {
   getUserName() {
     this.adalService.context.getUser((msg, user) => {
       if (user) {
-        let { profile: { name = '', unique_name = '' } = {} } = user;
+        let { profile: { name = "", unique_name = "" } = {} } = user;
         if (unique_name) {
           var index: string = unique_name;
-          this.username = index.split('@')[0];
+          this.username = index.split("@")[0];
         }
       }
     });

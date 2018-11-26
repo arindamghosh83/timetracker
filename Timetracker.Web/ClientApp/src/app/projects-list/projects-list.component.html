@@ -1,0 +1,36 @@
+<div class="container">
+  <div class="row mb-2 mt-2">
+    <app-typeahead-focus
+      [dataSource]="projects | projectDataSourceDescription"
+      (projectSelected)="getSelectedProjectId($event)"
+    ></app-typeahead-focus>
+    <a class="btn btn-primary" [routerLink]="['/']" id="wrkeffortbtn"
+      >Back To Work Effort</a
+    >
+  </div>
+  <div class="row">
+    <div class="col-2"><h3>Project Description</h3></div>
+    <div class="col-2"><h3>Project Status</h3></div>
+    <div class="col-2"><h3>Funding Status</h3></div>
+  </div>
+  <app-project
+    *ngFor="let project of currentPageProjects; index as i"
+    [project]="project"
+    [isAdmin]="isAdmin"
+  ></app-project>
+  <ngb-pagination
+    *ngIf="projects?.length"
+    [collectionSize]="projectCount"
+    [(page)]="page"
+    [pageSize]="pageSize"
+    (pageChange)="pageChanged($event)"
+    aria-label="Default pagination"
+  ></ngb-pagination>
+  <button class="btn btn-primary" (click)="addProject()" *ngIf="isAdmin">
+    <i class="fa fa-plus pr-2"></i>Add Project
+  </button>
+  <app-project-edit
+    [isProjectVisible]="addProjectFlag"
+    (isNavigationRequiredAfterProjectSaved)="showNewlySavedProject($event)"
+  ></app-project-edit>
+</div>

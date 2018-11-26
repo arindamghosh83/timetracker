@@ -21,7 +21,12 @@ import { AuthGuard } from "./guards/auth.guard";
 import { LogoutComponent } from "./logout/logout.component";
 import { NumberOnlyDirective } from "./directives/number-only.directive";
 import { TypeaheadFocusComponent } from "./typeahead-focus/typeahead-focus.component";
-import { ProjectDataSourceDescriptionPipe } from './project-data-source-description.pipe';
+import { ProjectDataSourceDescriptionPipe } from "./project-data-source-description.pipe";
+import { ProjectsListComponent } from "./projects-list/projects-list.component";
+import { ProjectComponent } from "./project/project.component";
+import { ProjectEditComponent } from "./project-edit/project-edit.component";
+import { AdminGuard } from "./guards/admin.guard";
+import { AppInsightsService } from "./services/app-insights.service";
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,7 +39,10 @@ import { ProjectDataSourceDescriptionPipe } from './project-data-source-descript
     EfforRowComponent,
     NumberOnlyDirective,
     TypeaheadFocusComponent,
-    ProjectDataSourceDescriptionPipe
+    ProjectDataSourceDescriptionPipe,
+    ProjectsListComponent,
+    ProjectComponent,
+    ProjectEditComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: "ng-cli-universal" }),
@@ -53,6 +61,8 @@ import { ProjectDataSourceDescriptionPipe } from './project-data-source-descript
     },
     AdalService,
     AuthGuard,
+    AdminGuard,
+    AppInsightsService,
     EffortService
   ],
   bootstrap: [AppComponent]

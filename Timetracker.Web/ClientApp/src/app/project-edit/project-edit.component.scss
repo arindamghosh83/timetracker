@@ -1,0 +1,17 @@
+div i:hover {
+  cursor: pointer;
+}
+.exclude-include-icon {
+  font-size: 1.5rem;
+  text-align: center;
+}
+.undoClass {
+  margin-left: 10px;
+  margin-top: 10px;
+}
+#saveundocontainer {
+  display: flex;
+}
+button:nth-of-type(2) {
+  margin-left: 3px;
+}

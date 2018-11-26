@@ -8,6 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class NavMenuComponent implements OnInit {
   @Input() username;
+  @Input() isAdmin: boolean;
   title: string;
   constructor() { }
 

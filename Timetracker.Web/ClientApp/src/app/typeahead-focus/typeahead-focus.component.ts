@@ -50,11 +50,14 @@ export class TypeaheadFocusComponent implements OnInit {
       map(term =>
         (term === ""
           ? this.dataSource
-          : this.dataSource.filter(
-              v => v.toLowerCase().indexOf(term.toLowerCase()) > -1
-              // v => v.description.toLowerCase().indexOf(term.toLowerCase()) > -1
-            )
-        ).slice(0, 10)
+          : this.dataSource.filter(v => {
+              if (v) {
+                return v.toLowerCase().indexOf(term.toLowerCase()) > -1;
+              } else {
+                return -1;
+              }
+            })
+        ).slice(0, this.dataSource.length)
       )
     );
   };
